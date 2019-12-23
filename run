@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require_relative "boot"
+
+sender = Sender.new
+iteration = 0
+
+loop do 
+  puts "Creating new messages.."
+  50.times do
+    sender.perform(iteration += 1)
+  end
+  puts "All enqueued!"
+
+  10.times do
+    puts "Ruby-Kafka queue size: #{$kafka_producer.instance_variable_get(:@queue).size}"
+    sleep(0.1)
+  end
+  puts "Starting again"
+end
+
+at_exit { $kafka_producer.shutdown }
